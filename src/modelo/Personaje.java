@@ -14,29 +14,73 @@ package modelo;
 
 public class Personaje {
 
-    public String nombre;
-    public String clase;
-    public int nivel;
-    public double vida;
-    public double vidaMaxima;
-    public int ataque;
-    public int defensa;
+    // Atributos PRIVADOS
+    private String nombre;
+    private String clase;
+    private int    nivel;
+    private double vida;
+    private double vidaMaxima;
+    private int    ataque;
+    private int    defensa;
+
+    private static final String[] CLASES = {"Guerrero", "Mago", "Arquero"};
 
     public Personaje(String nombre, String clase,
                      double vidaMax, int ataque, int defensa) {
         this.nombre     = nombre;
-        this.clase      = clase;
         this.nivel      = 1;
-        this.vida       = vidaMax;
         this.vidaMaxima = vidaMax;
+        this.vida       = vidaMax;
         this.ataque     = ataque;
         this.defensa    = defensa;
+        setClase(clase);
     }
 
-    @Override
-    public String toString() {
-        return String.format("[%s] %s Nv%d | HP:%.0f/%.0f",
-                clase, nombre, nivel, vida, vidaMaxima);
+    // GETTERS
+    public String getNombre()  { return nombre; }
+    public String getClase()   { return clase; }
+    public int    getNivel()   { return nivel; }
+    public double getVida()    { return vida; }
+    public int    getAtaque()  { return ataque; }
+    public int    getDefensa() { return defensa; }
+
+    // SETTERS CON VALIDACION
+    public void setVida(double v) {
+        if      (v < 0)          this.vida = 0;
+        else if (v > vidaMaxima) this.vida = vidaMaxima;
+        else                     this.vida = v;
+    }
+
+    public void setClase(String c) {
+        for (String valida : CLASES) {
+            if (valida.equals(c)) { this.clase = c; return; }
+        }
+        System.out.println("Clase invalida: " + c + " -> se asigna Guerrero");
+        this.clase = "Guerrero";
+    }
+
+    // EJERCICIO 2A - Nivel entre 1 y 50
+    public void setNivel(int n) {
+        if      (n < 1)  this.nivel = 1;
+        else if (n > 50) this.nivel = 50;
+        else             this.nivel = n;
+    }
+
+    // METODOS DE NEGOCIO
+    public void recibirDano(int dano) {
+        int danoReal = dano - this.defensa;
+        if (danoReal < 1) danoReal = 1;
+        setVida(this.vida - danoReal);
+        System.out.printf("%s recibe %d de dano. HP:%.0f%n", nombre, danoReal, vida);
+    }
+
+    public void curar(double cantidad) {
+        setVida(this.vida + cantidad);
+        System.out.printf("%s curado. HP:%.0f/%.0f%n", nombre, vida, vidaMaxima);
+    }
+
+    public boolean estaVivo() {
+        return this.vida > 0;
     }
 
     public void mostrarEstado() {
@@ -52,5 +96,11 @@ public class Personaje {
         else                       estado = "SALUDABLE";
 
         System.out.printf("[%s] %.0f%% - %s%n", barra, porcentaje, estado);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s Nv%d | HP:%.0f/%.0f",
+                clase, nombre, nivel, vida, vidaMaxima);
     }
 }

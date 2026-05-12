@@ -11,6 +11,8 @@ package modelo;
  */
 import modelo.Personaje;
 
+
+
 public class Principal {
 
     public static void main(String[] args) {
@@ -23,15 +25,26 @@ public class Principal {
         System.out.println(mago);
         System.out.println(arquero);
 
-        guerrero.vida -= 30;
-        System.out.println("Vida guerrero: " + guerrero.vida);
-        System.out.println("Vida mago:     " + mago.vida);
+        // Usar metodos en vez de acceso directo
+        guerrero.recibirDano(25);
+        guerrero.curar(10);
+        System.out.println(guerrero.estaVivo());
 
-        System.out.println("\n--- Estado de personajes ---");
+        // Probar setNivel
+        guerrero.setNivel(0);
+        System.out.println("Nivel: " + guerrero.getNivel());  // 1
+        guerrero.setNivel(75);
+        System.out.println("Nivel: " + guerrero.getNivel());  // 50
+        guerrero.setNivel(10);
+        System.out.println("Nivel: " + guerrero.getNivel());  // 10
+
+        // Probar clase invalida
+        Personaje raro = new Personaje("Sauron", "Dios", 200, 40, 20);
+        System.out.println(raro);
+
+        // Mostrar estado
+        System.out.println("\n--- Estado ---");
         guerrero.mostrarEstado();
-        mago.vida = 15;
         mago.mostrarEstado();
-        arquero.vida = 0;
-        arquero.mostrarEstado();
     }
 }
